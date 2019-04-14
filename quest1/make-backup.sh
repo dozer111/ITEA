@@ -2,7 +2,7 @@
 
 
 #Заменить в случае необходимости
-MY_PROJECT_DIRECTORY="/var/www/itea/quest1/ttt/xxxx"
+MY_PROJECT_DIRECTORY="/var/www/itea/quest1"
 FINAL_FILENAME="$MY_PROJECT_DIRECTORY/dump.sql"
 
 
