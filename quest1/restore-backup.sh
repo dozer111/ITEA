@@ -10,7 +10,7 @@ set -e
 # then use this script for unzip needed dump
 
 MY_PROJECT_DIRECTORY="/var/www/itea/quest1"
-DUMP_FILENAME="dump.sql.gz"
+DUMP_FILENAME="uploads.zip"
 UNZIP_DUMP_FILENAME="$1"
 
 
@@ -45,8 +45,8 @@ echo "==================================================================="
 if [ -f "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql" ]
   then
     COUNTER=0
-    FILENAME="$DUMP_DIRECTORY/$UNZIP_DUMP_FILENAME.sql";
-    while [ -f "$FILENAME" ];
+    FILENAME="$UNZIP_DUMP_FILENAME.sql";
+    while [ -f "$MY_PROJECT_DIRECTORY/$FILENAME" ];
     do
 
        COUNTER=$(($COUNTER+1))
@@ -54,12 +54,13 @@ if [ -f "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql" ]
        FILENAME="$UNZIP_DUMP_FILENAME$COUNTER_X.sql"
 
     done
-     gunzip -kc  "$DUMP_FILEPATH" >  "$MY_PROJECT_DIRECTORY/$FILENAME"
+     unzip -dq "$DUMP_FILEPATH" >  "$MY_PROJECT_DIRECTORY/$FILENAME"
     echo "File $FILENAME was created"
     echo "==================================================================="
 else
      echo "CREATE $MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
-     gunzip -kc  "$DUMP_FILEPATH" > "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
+     unzip -dq  "$DUMP_FILEPATH" > "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
+
 
 fi
 

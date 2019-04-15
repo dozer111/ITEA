@@ -22,17 +22,10 @@ then
     mkdir -p "$DUMP_FILEPATH"
     echo "Create new directory $DUMP_FILEPATH"
 
-    touch "$DUMP_FILENAME"
-    gzip -9 "$DUMP_FILENAME"
 
 fi
 
-
-if [ $? != 0 ]
-then
-echo "Error: $?"
-else
-echo "Success, exit-code:$?"
-fi
-
-
+touch "$DUMP_FILENAME"
+zip -9 -j "$DUMP_FILEPATH/uploads.zip" "$DUMP_FILENAME"
+rm  -f "$DUMP_FILENAME"
+echo "DB dump from $1 success"
