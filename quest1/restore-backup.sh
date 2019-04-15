@@ -2,29 +2,69 @@
 
 set -e
 
-#Заменить в случае необходимости
+# In start, i mean that we have project, which has structure, as in quest
+# Clone project from https://github.com/dozer111/ITEA/tree/master/quest1 to $MY_PROJECT_DIRECTORY
+
+
+# First run make-backup.sh <d-m-Y> to create some backup file in backend/web/uploads
+# then use this script for unzip needed dump
+
 MY_PROJECT_DIRECTORY="/var/www/itea/quest1"
+DUMP_FILENAME="dump.sql.gz"
+UNZIP_DUMP_FILENAME="$1"
 
-if [[ ! $1 =~ ^[0-9]{2}-[0-9]{2}-[0-9]{4}$ ]]
+
+if [[ ! $1 =~ ^[0-9]{2}-[0-9]{2}-[0-9]{4}$ ]] #check date argument
   then
-     echo "Введенное значение не валидно, скрипт должен вызыватся в формате ./scriptName.sh d-m-Y"
+     echo "InvalidArgumentException: first script argument must be date in format d-m-Y"
     exit 1
 fi
+DUMP_DIRECTORY="$MY_PROJECT_DIRECTORY/backend/web/uploads/$1"
+DUMP_FILEPATH="$DUMP_DIRECTORY/$DUMP_FILENAME"
 
-if [ ! -d "$MY_PROJECT_DIRECTORY" ]
+
+# check for correct project directory
+if [ ! -d "$DUMP_DIRECTORY" ]
 then
-    echo "Некорректная рабочая директория. Execute файл make-backup.sh"
+    echo "Dump does not exists. Please, make sure that you create dump by $MY_PROJECT_DIRECTORY/make-backup.sh <d-m-Y>"
+    exit 1
+elif [ ! -f "$DUMP_FILEPATH" ] # and if we have already dump for that day, generate new dump
+then
+    echo "DB dump $DUMP_FILENAME does not exists in $DUMP_DIRECTORY. Please, run $MY_PROJECT_DIRECTORY/make-backup.sh <d-m-Y>"
     exit 1
 fi
 
 
-BACKUP_DIRECTORY="backend/web/uploads"
-DUMP_DIRECTORY="$MY_PROJECT_DIRECTORY/$BACKUP_DIRECTORY/$1"
 
 
-mkdir -p $DUMP_DIRECTORY
-gzip -d  "$MY_PROJECT_DIRECTORY/dump.sql.gz"
-mv "$MY_PROJECT_DIRECTORY/dump.sql" "$DUMP_DIRECTORY/dump.sql"
+
+
+
+echo "Start creating backup"
+echo "==================================================================="
+if [ -f "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql" ]
+  then
+    COUNTER=0
+    FILENAME="$DUMP_DIRECTORY/$UNZIP_DUMP_FILENAME.sql";
+    while [ -f "$FILENAME" ];
+    do
+
+       COUNTER=$(($COUNTER+1))
+       COUNTER_X="_$COUNTER" #just for use _ as symbol
+       FILENAME="$UNZIP_DUMP_FILENAME$COUNTER_X.sql"
+
+    done
+     gunzip -kc  "$DUMP_FILEPATH" >  "$MY_PROJECT_DIRECTORY/$FILENAME"
+    echo "File $FILENAME was created"
+    echo "==================================================================="
+else
+     echo "CREATE $MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
+     gunzip -kc  "$DUMP_FILEPATH" > "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
+
+fi
+
+echo "Script run success"
+
 
 
 
