@@ -54,12 +54,12 @@ if [ -f "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql" ]
        FILENAME="$UNZIP_DUMP_FILENAME$COUNTER_X.sql"
 
     done
-     unzip -dq "$DUMP_FILEPATH" >  "$MY_PROJECT_DIRECTORY/$FILENAME"
+     unzip -d "$DUMP_FILEPATH" >  "$MY_PROJECT_DIRECTORY/$FILENAME"
     echo "File $FILENAME was created"
     echo "==================================================================="
 else
      echo "CREATE $MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
-     unzip -dq  "$DUMP_FILEPATH" > "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
+     unzip -d "$DUMP_FILEPATH" > "$MY_PROJECT_DIRECTORY/$UNZIP_DUMP_FILENAME.sql"
 
 
 fi
